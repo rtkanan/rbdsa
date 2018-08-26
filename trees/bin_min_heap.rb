@@ -7,11 +7,11 @@ class BinMinHeap
 
     def filter_up(size)
         while size / 2 > 0
-            rem = size / 2
-            if (@heaplist[size] < @heaplist[rem])
-                @heaplist[size], @heaplist[rem] = @heaplist[rem], @heaplist[size]
+            quo = size / 2
+            if (@heaplist[size] < @heaplist[quo])
+                @heaplist[size], @heaplist[quo] = @heaplist[quo], @heaplist[size]
             end
-            size = rem
+            size = quo
         end
     end
 

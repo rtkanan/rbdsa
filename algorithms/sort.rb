@@ -52,13 +52,36 @@ def insertion_sort(arr)
     arr
 end
 
+# Time Complexity:
+# - Worst known worst case: О(n^2)
+# - Worst known worst case: О(n log^2 n)
+# - Best case: O(n log n)
+# upgraded version of insertion sort
+# Perform insertion sort in subsets of the provided list
 def shell_sort(arr)
+    # Identify gap to split subset
+    gap = arr.size / 2
+    while gap > 0
+        # Process the list in subsets
+        (gap..(arr.size - 1)).each do |i|
+            j = i - gap
+
+            # Perform insertion sort in the subset
+            while j >= 0 and arr[i] < arr[j]
+                arr[i], arr[j] = arr[j], arr[i]
+                i, j = j, j-gap
+            end
+        end
+        gap = gap / 2
+    end
+    arr
 end
 
+input_array = [7, 6, 21, 47, 26, 1, 12]
 #input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
-input_array = [7, 6, 21, 47, 26, 1]
 
 # sorted_array = bubble_sort(input_array)
 # sorted_array = selection_sort(input_array)
-sorted_array = insertion_sort(input_array)
+# sorted_array = insertion_sort(input_array)
+sorted_array = shell_sort(input_array)
 p sorted_array

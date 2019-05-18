@@ -82,7 +82,7 @@ def merge_sort(arr)
     arr_size = arr.size
     # Basic check
     return arr if arr_size <= 1
-
+    
     # Split provided array into two parts
     mid = arr_size / 2
     left_arr = arr[0...mid]
@@ -102,12 +102,52 @@ def _merge(lset, rset)
     sorted + lset + rset
 end
 
-input_array = [7, 6, 21, 47, 26, 1, 12]
-#input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
+def quick_sort(arr)
+    arr_size = arr.size
+    # Basic check
+    return arr if arr_size <= 1
+    if arr_size == 2
+        arr[0], arr[1] = arr[1], arr[0] if arr[0] > arr[1]
+        return arr
+    end
+
+    # Consider first value as pivot.
+    # Need to identify the correct position of the pivot value in the given array.
+    pivot_value = arr[0]
+    # Iterator index to move all the values greater than pivot value
+    i = 1
+    # Iterator index to move all the values lesser than pivot value
+    j = arr_size - 1
+
+    # Loop until i and j crosses each other
+    loop do
+        # Loop until you identify the first element greater than the pivot value
+        while i <= arr_size-1 and arr[i] <= pivot_value 
+            i += 1
+        end
+        # Loop until you identify the first element lesser than the pivot value
+        while j >= 0 and arr[j] > pivot_value
+            j -= 1
+        end
+        # Swap those two elements
+        i < j ? (arr[i], arr[j] = arr[j], arr[i]) : break
+    end
+    # Swap the pivot value to its position.
+    # At this point all the values to the left of the pivot value will be lesser
+    # whereas the values to right will be greater than the pivot value
+    arr[0], arr[j] = arr[j], arr[0]
+    arr[0..j] = quick_sort(arr[0..j])
+    arr[i..arr_size - 1] = quick_sort(arr[i..arr_size - 1])
+    arr
+end
+
+input_array = [7, 6, 21, 47, 26, 1, 12, 7]
+# input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
 
 # sorted_array = bubble_sort(input_array)
 # sorted_array = selection_sort(input_array)
 # sorted_array = insertion_sort(input_array)
 # sorted_array = shell_sort(input_array)
-sorted_array = merge_sort(input_array)
+# sorted_array = merge_sort(input_array)
+sorted_array = quick_sort(input_array)
 p sorted_array

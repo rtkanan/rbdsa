@@ -77,11 +77,37 @@ def shell_sort(arr)
     arr
 end
 
+# Time Complexity: nlog(n)
+def merge_sort(arr)
+    arr_size = arr.size
+    # Basic check
+    return arr if arr_size <= 1
+
+    # Split provided array into two parts
+    mid = arr_size / 2
+    left_arr = arr[0...mid]
+    right_arr = arr[mid...arr_size]
+
+    _merge(merge_sort(left_arr), merge_sort(right_arr))
+end
+
+# Merge feature implementation
+def _merge(lset, rset)
+    sorted = []
+
+    # Compare arrays until any one becomes empty
+    until lset.empty? or rset.empty?
+        lset.first <= rset.first ? sorted << lset.shift : sorted << rset.shift
+    end
+    sorted + lset + rset
+end
+
 input_array = [7, 6, 21, 47, 26, 1, 12]
 #input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
 
 # sorted_array = bubble_sort(input_array)
 # sorted_array = selection_sort(input_array)
 # sorted_array = insertion_sort(input_array)
-sorted_array = shell_sort(input_array)
+# sorted_array = shell_sort(input_array)
+sorted_array = merge_sort(input_array)
 p sorted_array

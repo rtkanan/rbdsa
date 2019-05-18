@@ -102,7 +102,8 @@ def _merge(lset, rset)
     sorted + lset + rset
 end
 
-def quick_sort(arr)
+# With recursion the level is going very deep. Only a small list could be handled.
+def quick_sort_recursion(arr)
     arr_size = arr.size
     # Basic check
     return arr if arr_size <= 1
@@ -141,7 +142,68 @@ def quick_sort(arr)
     arr
 end
 
-input_array = [7, 6, 21, 47, 26, 1, 12, 7]
+# Quick Sort without recurssion.
+# TODO: Not able to handle duplicate values.
+def quick_sort(arr)
+    arr_size = arr.size
+    # Basic check
+    return arr if arr_size <= 1
+    if arr_size == 2
+        arr[0], arr[1] = arr[1], arr[0] if arr[0] > arr[1]
+        return arr
+    end
+
+    # Consider first value as pivot.
+    # Need to identify the correct position of the pivot value in the given array.
+    container = []
+
+    container << [0, arr_size-1]
+
+    loop do
+        container.each do |p|
+            start_index = p[0]
+            last_index = p[1]
+            pivot_value = arr[start_index]
+
+            if (start_index..last_index).count == 2
+                arr[0], arr[1] = arr[1], arr[0] if arr[0] > arr[1]
+                container.shift
+                break
+            end
+
+            i = start_index + 1
+            j = last_index
+
+            # Loop until you identify the first element greater than the pivot value
+            while i <= last_index and arr[i] < pivot_value 
+                i += 1
+            end
+
+            # Loop until you identify the first element lesser than the pivot value
+            while i <= last_index and j >= start_index and arr[j] > pivot_value
+                j -= 1
+            end
+
+            # Swap those two elements
+            if i < j
+                arr[i], arr[j] = arr[j], arr[i]
+            else
+                # if j > start_index or i <= last_index
+                if start_index != j
+                    arr[start_index], arr[j] = arr[j], arr[start_index]
+                    container << [start_index, j]
+                end
+                container << [j+1, last_index] if j != last_index
+                container.shift
+                break
+            end
+        end
+        break if container.empty?
+    end
+    arr
+end
+
+input_array = [7, 6, 21, 47, 26, 1, 12]
 # input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
 
 # sorted_array = bubble_sort(input_array)
@@ -149,5 +211,6 @@ input_array = [7, 6, 21, 47, 26, 1, 12, 7]
 # sorted_array = insertion_sort(input_array)
 # sorted_array = shell_sort(input_array)
 # sorted_array = merge_sort(input_array)
+# sorted_array = quick_sort_recursion(input_array)
 sorted_array = quick_sort(input_array)
 p sorted_array

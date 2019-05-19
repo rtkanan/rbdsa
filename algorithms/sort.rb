@@ -143,6 +143,25 @@ def partition(arr, first, last)
     right_pos
 end
 
+# Time Complexity:
+# - Worst : О(n + k)
+def counting_sort(arr)
+    max_value = arr.max
+    count_arr = Array.new(max_value+1, 0)
+    
+    arr.map{ |i| count_arr[i] += 1 }
+    
+    (1..max_value).map { |i| count_arr[i] += count_arr[i-1] }
+
+    output_arr = Array.new()
+    (arr.size-1).downto(0).each do |i|
+        output_arr[count_arr[arr[i]]] = arr[i]
+        count_arr[arr[i]] -= 1
+    end
+
+    output_arr.compact!
+end
+
 input_array = [7, 6, 21, 47, 26, 1, 12, 7]
 input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
 
@@ -151,5 +170,6 @@ input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 3
 # sorted_array = insertion_sort(input_array)
 # sorted_array = shell_sort(input_array)
 # sorted_array = merge_sort(input_array)
-sorted_array = quick_sort(input_array, 0, input_array.size-1)
+# sorted_array = quick_sort(input_array, 0, input_array.size-1)
+sorted_array = counting_sort(input_array)
 p sorted_array

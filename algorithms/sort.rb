@@ -54,7 +54,7 @@ end
 
 # Time Complexity:
 # - Worst known worst case: О(n^2)
-# - Worst known worst case: О(n log^2 n)
+# - Best known worst case: О(n log^2 n)
 # - Best case: O(n log n)
 # upgraded version of insertion sort
 # Perform insertion sort in subsets of the provided list
@@ -102,115 +102,54 @@ def _merge(lset, rset)
     sorted + lset + rset
 end
 
-# With recursion the level is going very deep. Only a small list could be handled.
-def quick_sort_recursion(arr)
-    arr_size = arr.size
-    # Basic check
-    return arr if arr_size <= 1
-    if arr_size == 2
-        arr[0], arr[1] = arr[1], arr[0] if arr[0] > arr[1]
-        return arr
-    end
-
-    # Consider first value as pivot.
-    # Need to identify the correct position of the pivot value in the given array.
-    pivot_value = arr[0]
-    # Iterator index to move all the values greater than pivot value
-    i = 1
-    # Iterator index to move all the values lesser than pivot value
-    j = arr_size - 1
-
-    # Loop until i and j crosses each other
-    loop do
-        # Loop until you identify the first element greater than the pivot value
-        while i <= arr_size-1 and arr[i] <= pivot_value 
-            i += 1
-        end
-        # Loop until you identify the first element lesser than the pivot value
-        while j >= 0 and arr[j] > pivot_value
-            j -= 1
-        end
-        # Swap those two elements
-        i < j ? (arr[i], arr[j] = arr[j], arr[i]) : break
-    end
-    # Swap the pivot value to its position.
-    # At this point all the values to the left of the pivot value will be lesser
-    # whereas the values to right will be greater than the pivot value
-    arr[0], arr[j] = arr[j], arr[0]
-    arr[0..j] = quick_sort(arr[0..j])
-    arr[i..arr_size - 1] = quick_sort(arr[i..arr_size - 1])
-    arr
-end
-
-# Quick Sort without recurssion.
-# TODO: Not able to handle duplicate values.
-def quick_sort(arr)
-    arr_size = arr.size
-    # Basic check
-    return arr if arr_size <= 1
-    if arr_size == 2
-        arr[0], arr[1] = arr[1], arr[0] if arr[0] > arr[1]
-        return arr
-    end
-
-    # Consider first value as pivot.
-    # Need to identify the correct position of the pivot value in the given array.
-    container = []
-
-    container << [0, arr_size-1]
-
-    loop do
-        container.each do |p|
-            start_index = p[0]
-            last_index = p[1]
-            pivot_value = arr[start_index]
-
-            if (start_index..last_index).count == 2
-                arr[0], arr[1] = arr[1], arr[0] if arr[0] > arr[1]
-                container.shift
-                break
-            end
-
-            i = start_index + 1
-            j = last_index
-
-            # Loop until you identify the first element greater than the pivot value
-            while i <= last_index and arr[i] < pivot_value 
-                i += 1
-            end
-
-            # Loop until you identify the first element lesser than the pivot value
-            while i <= last_index and j >= start_index and arr[j] > pivot_value
-                j -= 1
-            end
-
-            # Swap those two elements
-            if i < j
-                arr[i], arr[j] = arr[j], arr[i]
-            else
-                # if j > start_index or i <= last_index
-                if start_index != j
-                    arr[start_index], arr[j] = arr[j], arr[start_index]
-                    container << [start_index, j]
-                end
-                container << [j+1, last_index] if j != last_index
-                container.shift
-                break
-            end
-        end
-        break if container.empty?
+# Time Complexity:
+# - Worst : О(n^2)
+# - Best Average: О(n log(n))
+# - Best case: O(n log(n))
+def quick_sort(arr, first, last)
+    if first < last
+        pivot_index = partition(arr, first, last)
+        quick_sort(arr, first, pivot_index-1)
+        quick_sort(arr, pivot_index+1, last)
     end
     arr
 end
 
-input_array = [7, 6, 21, 47, 26, 1, 12]
-# input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
+def partition(arr, first, last)
+    pivot_value = arr[first]
+    left_pos = first + 1
+    right_pos = last
+    done = false
+
+    until done
+        while left_pos <= right_pos and arr[left_pos] <= pivot_value
+            left_pos += 1
+        end
+
+        while right_pos >= left_pos and arr[right_pos] >= pivot_value
+            right_pos -= 1
+        end
+
+        if right_pos <= left_pos
+            done = true
+        else
+            # Swap to keep values lesser and greater than pivot value
+            arr[left_pos], arr[right_pos] = arr[right_pos], arr[left_pos]
+        end
+    end
+
+    # Swap pivot value to its sorted position
+    arr[first], arr[right_pos] = arr[right_pos], arr[first]
+    right_pos
+end
+
+input_array = [7, 6, 21, 47, 26, 1, 12, 7]
+input_array = [7, 47, 21, 47, 26, 31, 31, 47, 41, 14, 49, 6, 9, 36, 31, 15, 5, 36, 35, 25]
 
 # sorted_array = bubble_sort(input_array)
 # sorted_array = selection_sort(input_array)
 # sorted_array = insertion_sort(input_array)
 # sorted_array = shell_sort(input_array)
 # sorted_array = merge_sort(input_array)
-# sorted_array = quick_sort_recursion(input_array)
-sorted_array = quick_sort(input_array)
+sorted_array = quick_sort(input_array, 0, input_array.size-1)
 p sorted_array
